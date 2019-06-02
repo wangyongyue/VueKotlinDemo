@@ -4,8 +4,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import com.example.vue_kotlin.*
+import com.example.vuekotlindemo.Model.ButtonModel
+import com.example.vuekotlindemo.Model.EditorModel
+import com.example.vuekotlindemo.Model.TextModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -29,17 +33,26 @@ class MainActivity : AppCompatActivity() {
 
         arrayVue.v_list(true,{
 
+            val list = listOf("text 使用","button 使用","editorText 使用")
             var items = mutableListOf<VueData>()
-            for (i in 1..12){
-                items.add(UserData("今天下雨了$i"))
+            for (value in list){
+                items.add(UserData(value))
             }
-
             return@v_list items
         })
 
         ad.v_didSelect {
 
-            Router.push(Main2.getActivity(),Main2.toString())
+            if (it == 0){
+                Router.push(TextModel.getActivity(),TextModel.toString())
+
+            }else if (it == 1){
+                Router.push(ButtonModel.getActivity(),ButtonModel.toString())
+
+            }else if (it == 2){
+                Router.push(EditorModel.getActivity(),EditorModel.toString())
+
+            }
 
         }
 
