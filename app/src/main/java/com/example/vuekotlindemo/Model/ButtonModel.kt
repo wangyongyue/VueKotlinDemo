@@ -8,40 +8,28 @@ import com.example.vue_kotlin.RHolder
 import com.example.vue_kotlin.Router
 import com.example.vue_kotlin.Vue
 import com.example.vue_kotlin.VueData
-import com.example.vuekotlindemo.Main2Activity
-import com.example.vuekotlindemo.Main2Interface
-import com.example.vuekotlindemo.R
+import com.example.vuekotlindemo.*
 
-class ButtonModel: Main2Interface {
+class ButtonModel: Vue() {
 
-    override val arrayVue: Vue = Vue()
-    override val indexVue: Vue = Vue()
-
-    companion object{
-
-        fun getActivity(): Class<Any>{
-
-            return Main2Activity::class.java as Class<Any>
-        }
-
+    override fun v_viewController(): Class<Any>? {
+        return Main2Activity::class.java as Class<Any>
     }
 
-    override fun startListen() {
+    override fun v_start() {
+        super.v_start()
 
-        arrayVue.v_list(false,{
+        var items = mutableListOf<VueData>()
+        for (i in 1..12){
+            items.add(ButtonData("button$i"))
+        }
+        this.v_array(arrayID,{
 
-
-            var items = mutableListOf<VueData>()
-            for (i in 1..12){
-                items.add(ButtonData("button$i"))
-            }
-
-            return@v_list items
+            return@v_array items
         })
-        indexVue.v_index {
+        this.v_index(indexID,{ it:Int ->
 
-
-            val data = arrayVue.v_list?.elementAt(it) as ButtonData
+            val data = items.elementAt(it) as ButtonData
 
             if (data.v_identifier == 0){
 
@@ -53,7 +41,9 @@ class ButtonModel: Main2Interface {
 
             }
 
-        }
+        })
+
+
     }
 
 
@@ -82,7 +72,7 @@ class RButtonViewHolder(viewItem: View) : RHolder(viewItem){
             leftButon.setOnClickListener {
                 model?.v_identifier = 0
 
-                v_selectOb.v_on?.invoke()
+               v_to()
 
 
             }
@@ -90,7 +80,7 @@ class RButtonViewHolder(viewItem: View) : RHolder(viewItem){
 
                 model?.v_identifier = 1
 
-                v_selectOb.v_on?.invoke()
+                v_to()
 
             }
 

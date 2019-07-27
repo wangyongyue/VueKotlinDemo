@@ -4,41 +4,31 @@ import android.widget.Toast
 import com.example.vue_kotlin.Router
 import com.example.vue_kotlin.Vue
 import com.example.vue_kotlin.VueData
-import com.example.vuekotlindemo.Main2Activity
-import com.example.vuekotlindemo.Main2Interface
-import com.example.vuekotlindemo.UserData
+import com.example.vuekotlindemo.*
 
-class TextModel: Main2Interface {
+class TextModel:  Vue() {
 
-    override val arrayVue: Vue = Vue()
-    override val indexVue: Vue = Vue()
-
-    companion object{
-
-        fun getActivity(): Class<Any>{
-
-            return Main2Activity::class.java as Class<Any>
-        }
-
+    override fun v_viewController(): Class<Any>? {
+        return Main2Activity::class.java as Class<Any>
     }
 
-    override fun startListen() {
+    override fun v_start() {
+        super.v_start()
 
-        arrayVue.v_list(false,{
-
-
-            var items = mutableListOf<VueData>()
-            for (i in 1..12){
-                items.add(UserData("text$i"))
-            }
-
-            return@v_list items
-        })
-        indexVue.v_index {
-
-            Toast.makeText(Router.instance.topActivity(),"$it", Toast.LENGTH_SHORT).show()
-
+        var items = mutableListOf<VueData>()
+        for (i in 1..12){
+            items.add(UserData("text$i"))
         }
+        this.v_array(arrayID,{
+
+            return@v_array items
+        })
+        this.v_index(indexID,{ it:Int ->
+
+
+        })
+
+
     }
 
 

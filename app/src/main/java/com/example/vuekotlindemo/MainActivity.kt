@@ -1,16 +1,18 @@
 package com.example.vuekotlindemo
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import com.example.vue_kotlin.*
-import com.example.vuekotlindemo.Model.ButtonModel
-import com.example.vuekotlindemo.Model.EditorModel
-import com.example.vuekotlindemo.Model.TextModel
+import com.example.vuekotlindemo.Model.*
 import kotlinx.android.synthetic.main.activity_main.*
+val arrayID = "arrayID"
+val indexID = "indexID"
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,42 +21,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         addActivity()
 
-        var arrayVue = Vue()
 
-        var holders = mapOf<Int,String>(
-            R.layout.layout_item to RUserViewHolder::class.java.toString()
-        )
+        Vue.register(R.layout.layout_item,RUserViewHolder::class.java.toString())
+        Vue.register(R.layout.layout_button, RButtonViewHolder::class.java.toString())
+        Vue.register(R.layout.layout_editor, REditorViewHolder::class.java.toString())
 
 
+
+        var vue = Main()
         recyler.layoutManager = LinearLayoutManager(this)
-        var ad =  RAdapter(holders)
-        ad.v_list(arrayVue)
+        var ad =  RAdapter()
+        ad.v_array(arrayID,vue)
         recyler.adapter = ad
 
-        arrayVue.v_list(true,{
-
-            val list = listOf("text 使用","button 使用","editorText 使用")
-            var items = mutableListOf<VueData>()
-            for (value in list){
-                items.add(UserData(value))
-            }
-            return@v_list items
-        })
-
-        ad.v_didSelect {
-
-            if (it == 0){
-                Router.push(TextModel.getActivity(),TextModel.toString())
-
-            }else if (it == 1){
-                Router.push(ButtonModel.getActivity(),ButtonModel.toString())
-
-            }else if (it == 2){
-                Router.push(EditorModel.getActivity(),EditorModel.toString())
-
-            }
-
-        }
+        ad.v_index(indexID,vue)
+        vue.v_start()
 
 
 
@@ -66,6 +47,39 @@ class MainActivity : AppCompatActivity() {
         removeActivity()
     }
 }
+class Main:Vue(){
+
+    override fun v_start() {
+        super.v_start()
+
+        val list = listOf("text 使用","button 使用","editorText 使用")
+        var items = mutableListOf<VueData>()
+        for (value in list){
+            items.add(UserData(value))
+        }
+        this.v_array(arrayID,{
+
+            return@v_array items
+        })
+        this.v_index(indexID,{ it:Int ->
+
+            if (it == 0){
+                Router.push(TextModel())
+
+            }else if (it == 1){
+                Router.push(ButtonModel())
+
+            }else if (it == 2){
+                Router.push(EditorModel())
+            }
+
+        })
+
+
+    }
+}
+
+
 class UserData(var name:String): VueData {
 
     override val layoutIdentity: Int
@@ -92,7 +106,7 @@ class RUserViewHolder(viewItem: View) : RHolder(viewItem){
 
                 model?.v_identifier = 1
 
-                v_selectOb.v_on?.invoke()
+                v_to()
 
             }
 

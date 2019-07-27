@@ -5,42 +5,34 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.vue_kotlin.*
-import com.example.vuekotlindemo.Main2Activity
-import com.example.vuekotlindemo.Main2Interface
+import com.example.vuekotlindemo.*
 import com.example.vuekotlindemo.R
-import com.example.vuekotlindemo.UserData
 
-class EditorModel: Main2Interface {
+class EditorModel:  Vue() {
 
-    override val arrayVue: Vue = Vue()
-    override val indexVue: Vue = Vue()
-
-    companion object{
-
-        fun getActivity(): Class<Any>{
-
-            return Main2Activity::class.java as Class<Any>
-        }
-
+    override fun v_viewController(): Class<Any>? {
+        return Main2Activity::class.java as Class<Any>
     }
 
-    override fun startListen() {
+    override fun v_start() {
+        super.v_start()
 
-        arrayVue.v_list(false,{
+        var items = mutableListOf<VueData>()
+        for (i in 1..12){
+            items.add(EditorData("今天晴朗$i"))
+        }
+        this.v_array(arrayID,{
 
-
-            var items = mutableListOf<VueData>()
-            for (i in 1..12){
-                items.add(EditorData("今天晴朗$i"))
-            }
-
-            return@v_list items
+            return@v_array items
         })
-        indexVue.v_index {
+        this.v_index(indexID,{ it:Int ->
 
 
-        }
+        })
+
+
     }
+
 
 
 }
@@ -70,7 +62,6 @@ class REditorViewHolder(viewItem: View) : RHolder(viewItem){
                 textView.setText(it)
 
             }
-
 
 
 
