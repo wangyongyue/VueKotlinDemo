@@ -18,22 +18,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         addActivity()
 
-
-        Vue.register(R.layout.layout_item,RUserViewHolder::class.java.toString())
-        Vue.register(R.layout.layout_button, RButtonViewHolder::class.java.toString())
-        Vue.register(R.layout.layout_editor, REditorViewHolder::class.java.toString())
-
-
+        Cells().registerAllCell()
 
         var vue = Main()
         recyler.layoutManager = LinearLayoutManager(this)
         var ad =  RAdapter()
-        ad.v_array(arrayID,vue)
         recyler.adapter = ad
 
+        ad.v_array(arrayID,vue)
         ad.v_index(indexID,vue)
         vue.v_start()
 
